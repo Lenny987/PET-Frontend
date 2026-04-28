@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounting Operations and Reporting</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 2px solid #b1b1b1;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .blue-cell {
+            background-color: #e6f2ff;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+            margin: 2px 0;
+        }
+        .account-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .account-label {
+            width: 20px;
+            margin-right: 10px;
+        }
+        .correct {
+            background-color: #4CAF50;
+        }
+        .incorrect {
+            background-color: #f44336;
+        }
+        #page3 table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        #page3 th[colspan="6"] {
+            text-align: center; 
+        }
+        #page3 .number-cell {
+            text-align: center;
+            width: 20px;
+        }
+        #page3 .desc-cell {
+            width: 150px;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+        #page3 .amount-cell {
+            width: 100px;
+            text-align: right;
+            padding-right: 15px;
+        }
+        .right-align {
+            text-align: right;
+            padding-right: 15px; 
+        }
+        #page3 input { 
+            width: 30px; 
+        }
+        .debit-total {
+            background-color: #e6ffcc;
+            font-weight: bold;
+        }
+        .credit-total {
+            background-color: #fdf68f;
+            font-weight: bold;
+        }
+        .credit-total1 {
+            background-color: #ff918d;
+            font-weight: bold;
+        }
+        button.disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <div>
+            <button @click="currentPage = 'page1'">Задание</button>
+            <button @click="currentPage = 'page2'">Журнал операций</button>
+            <button @click="currentPage = 'page3'">Главная книга</button>
+            <button @click="currentPage = 'page4'">Пробный баланс</button>
+        </div>
+
+        <!-- Page 1: Task -->
+        <div id="page1" class="page" :class="{active: currentPage === 'page1'}">
+            <h1>Case "Accounting Operations and Reporting" Part I</h1>
+            <ol>
+                <li>On June 1, 2022, architectural designer Roman Hadid-Freskov decided to start his own business and invested ₽2,000,000 of his own funds by transferring money from his personal bank account to the company's bank account "Hadid-Freskov & Co".</li>
+            <p>During June 2022, Roman had carried out the following transactions (all payments were made either from the bank account or using the corporate card linked to the bank account):</p>
+                <li>June 1st - He made a prepayment of ₽40,000 for office rent for the month of June</li>
+                <li>June 1st - He purchased office equipment for ₽200,000, but the payment was not made yet (so he bought it on credit)</li>
+                <li>June 1st - He purchased office supplies for ₽30,000, but the payment was not made yet (so he bought it on credit; supplies shoud be better recorded as 'inventory')</li>
+                <li>June 1st - Roman hired an assistant with a salary of ₽50,000 per month</li>
+                <li>June 5th - Conducted a technical expertise of a mansion for the company "Realty" and issued an invoice for ₽280,000</li>
+                <li>June 7th - Decided to contribute his own car which is worth ₽400,000 as an investment into the company</li>
+                <li>June 9th - Purchased gasoline for ₽2,000, payment made (shoud be better recorded as 'inventory')</li>
+                <li>June 12th - Invited a client for a business lunch and paid ₽4,000; they discussed preparation of a design project for a new factory, for which he plans to receive ₽500,000 as payment for the work when the contract would be signed</li>
+                <li>June 16th - Developed a structural design project for "Landville" and issued an invoice for ₽240,000</li>
+                <li>June 20th - Invited another potential client for a business lunch and paid ₽6,000, but it turned out that he would not be able to take on the work for this client</li>
+                <li>June 23th - All office supplies purchased on June 1, 2022 were used</li>
+                <li>June 25th - Used up all the gasoline purchased on June 9, 2022</li>
+                <li>June 30th - The assistant's salary for June 2022 was accrued</li>
+                <li>June 30th - The assistant's salary for June 2022 was paid</li>
+                <li>June 30th - Paid the invoice for office equipment in the amount of ₽200,000</li>
+                <li>June 30th - Paid the invoice for office supplies in the amount of ₽30,000</li>
+                <li>June 30th - Received payment from the company "Realty" in the amount of ₽280,000</li>
+                <li>June 30th - Withdrew ₽50,000 in cash from the corporate card for personal expenses</li>
+                <li>June 30th - Received a confirmation from the landlord for the services provided for office rent for June 2022, in the amount of ₽40,000</li>
+            </ol>
+            <h2>Task for part I:</h2>
+            <ol>
+                <li>Register the transactions in the General Journal (sheet "General Journal Part I"). Select the correct corresponding account from the dropdown list and enter the amount in the Debit cell</li>
+                <li>Fill in and foot T-accounts (sheet 'General Ledger Part I') Transfer the operation index number from the General Ledger to the blue cells of respective T-accounts (only in the Debit and Credit columns); for operation #1 use the account "Cash" and the account "Shareholder's Capital"</li>
+                <li>Prepare the Trial balance (sheet "Trial Balance Part I"). This register is generated automatically.</li>
+            </ol>
+        </div>
+
+        <!-- Page 2: General Journal -->
+        <div id="page2" class="page" :class="{active: currentPage === 'page2'}">
+            <h1>General Journal</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Date</th>
+                        <th>Corresponding accounts</th>
+                        <th>Dr, ₽</th>
+                        <th>Cr, ₽</th>
+                        <th>Correct</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Transaction 1 - Dr -->
+                    <tr>
+                        <td rowspan="2">1</td>
+                        <td rowspan="2">01.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[0].account1" @change="checkCorrect(0, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[0].debit" @input="updateCredit(0)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[0].drCorrect, 'incorrect': !journalEntries[0].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 1 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[0].account2" @change="checkCorrect(0, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[0].credit }}</td>
+                        <td :class="{'correct': journalEntries[0].crCorrect, 'incorrect': !journalEntries[0].crCorrect}"></td>
+                    </tr>
+
+                    <!-- Transaction 2 - Dr -->
+                    <tr>
+                        <td rowspan="2">2</td>
+                        <td rowspan="2">01.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[1].account1" @change="checkCorrect(1, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[1].debit" @input="updateCredit(1)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[1].drCorrect, 'incorrect': !journalEntries[1].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 2 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[1].account2" @change="checkCorrect(1, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[1].credit }}</td>
+                        <td :class="{'correct': journalEntries[1].crCorrect, 'incorrect': !journalEntries[1].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 3 - Dr -->
+                    <tr>
+                        <td rowspan="2">3</td>
+                        <td rowspan="2">01.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[2].account1" @change="checkCorrect(2, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[2].debit" @input="updateCredit(2)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[2].drCorrect, 'incorrect': !journalEntries[2].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 3 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[2].account2" @change="checkCorrect(2, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[2].credit }}</td>
+                        <td :class="{'correct': journalEntries[2].crCorrect, 'incorrect': !journalEntries[2].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 4 - Dr -->
+                    <tr>
+                        <td rowspan="2">4</td>
+                        <td rowspan="2">01.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[3].account1" @change="checkCorrect(3, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[3].debit" @input="updateCredit(3)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[3].drCorrect, 'incorrect': !journalEntries[3].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 4 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[3].account2" @change="checkCorrect(3, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[3].credit }}</td>
+                        <td :class="{'correct': journalEntries[3].crCorrect, 'incorrect': !journalEntries[3].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 5 - Dr -->
+                    <tr>
+                        <td rowspan="2">5</td>
+                        <td rowspan="2">01.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[4].account1" @change="checkCorrect(4, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[4].debit" @input="updateCredit(4)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[4].drCorrect, 'incorrect': !journalEntries[4].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 5 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[4].account2" @change="checkCorrect(4, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[4].credit }}</td>
+                        <td :class="{'correct': journalEntries[4].crCorrect, 'incorrect': !journalEntries[4].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 6 - Dr -->
+                    <tr>
+                        <td rowspan="2">6</td>
+                        <td rowspan="2">05.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[5].account1" @change="checkCorrect(5, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[5].debit" @input="updateCredit(5)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[5].drCorrect, 'incorrect': !journalEntries[5].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 6 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[5].account2" @change="checkCorrect(5, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[5].credit }}</td>
+                        <td :class="{'correct': journalEntries[5].crCorrect, 'incorrect': !journalEntries[5].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 7 - Dr -->
+                    <tr>
+                        <td rowspan="2">7</td>
+                        <td rowspan="2">07.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[6].account1" @change="checkCorrect(6, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[6].debit" @input="updateCredit(6)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[6].drCorrect, 'incorrect': !journalEntries[6].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 7 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[6].account2" @change="checkCorrect(6, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[6].credit }}</td>
+                        <td :class="{'correct': journalEntries[6].crCorrect, 'incorrect': !journalEntries[6].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 8 - Dr -->
+                    <tr>
+                        <td rowspan="2">8</td>
+                        <td rowspan="2">09.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[7].account1" @change="checkCorrect(7, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[7].debit" @input="updateCredit(7)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[7].drCorrect, 'incorrect': !journalEntries[7].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 8 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[7].account2" @change="checkCorrect(7, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[7].credit }}</td>
+                        <td :class="{'correct': journalEntries[7].crCorrect, 'incorrect': !journalEntries[7].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 9 - Dr -->
+                    <tr>
+                        <td rowspan="2">9</td>
+                        <td rowspan="2">12.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[8].account1" @change="checkCorrect(8, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[8].debit" @input="updateCredit(8)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[8].drCorrect, 'incorrect': !journalEntries[8].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 9 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[8].account2" @change="checkCorrect(8, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[8].credit }}</td>
+                        <td :class="{'correct': journalEntries[8].crCorrect, 'incorrect': !journalEntries[8].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 10 - Dr -->
+                    <tr>
+                        <td rowspan="2">10</td>
+                        <td rowspan="2">16.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[9].account1" @change="checkCorrect(9, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[9].debit" @input="updateCredit(9)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[9].drCorrect, 'incorrect': !journalEntries[9].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 10 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[9].account2" @change="checkCorrect(9, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[9].credit }}</td>
+                        <td :class="{'correct': journalEntries[9].crCorrect, 'incorrect': !journalEntries[9].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 11 - Dr -->
+                    <tr>
+                        <td rowspan="2">11</td>
+                        <td rowspan="2">20.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[10].account1" @change="checkCorrect(10, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[10].debit" @input="updateCredit(10)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[10].drCorrect, 'incorrect': !journalEntries[10].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 11 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[10].account2" @change="checkCorrect(10, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[10].credit }}</td>
+                        <td :class="{'correct': journalEntries[10].crCorrect, 'incorrect': !journalEntries[10].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 12 - Dr -->
+                    <tr>
+                        <td rowspan="2">12</td>
+                        <td rowspan="2">23.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[11].account1" @change="checkCorrect(11, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[11].debit" @input="updateCredit(11)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[11].drCorrect, 'incorrect': !journalEntries[11].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 12 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[11].account2" @change="checkCorrect(11, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[11].credit }}</td>
+                        <td :class="{'correct': journalEntries[11].crCorrect, 'incorrect': !journalEntries[11].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 13 - Dr -->
+                    <tr>
+                        <td rowspan="2">13</td>
+                        <td rowspan="2">25.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[12].account1" @change="checkCorrect(12, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[12].debit" @input="updateCredit(12)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[12].drCorrect, 'incorrect': !journalEntries[12].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 13 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[12].account2" @change="checkCorrect(12, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[12].credit }}</td>
+                        <td :class="{'correct': journalEntries[12].crCorrect, 'incorrect': !journalEntries[12].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 14 - Dr -->
+                    <tr>
+                        <td rowspan="2">14</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[13].account1" @change="checkCorrect(13, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[13].debit" @input="updateCredit(13)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[13].drCorrect, 'incorrect': !journalEntries[13].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 14 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[13].account2" @change="checkCorrect(13, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[13].credit }}</td>
+                        <td :class="{'correct': journalEntries[13].crCorrect, 'incorrect': !journalEntries[13].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 15 - Dr -->
+                    <tr>
+                        <td rowspan="2">15</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[14].account1" @change="checkCorrect(14, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[14].debit" @input="updateCredit(14)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[14].drCorrect, 'incorrect': !journalEntries[14].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 15 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[14].account2" @change="checkCorrect(14, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[14].credit }}</td>
+                        <td :class="{'correct': journalEntries[14].crCorrect, 'incorrect': !journalEntries[14].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 16 - Dr -->
+                    <tr>
+                        <td rowspan="2">16</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[15].account1" @change="checkCorrect(15, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[15].debit" @input="updateCredit(15)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[15].drCorrect, 'incorrect': !journalEntries[15].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 16 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[15].account2" @change="checkCorrect(15, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[15].credit }}</td>
+                        <td :class="{'correct': journalEntries[15].crCorrect, 'incorrect': !journalEntries[15].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 17 - Dr -->
+                    <tr>
+                        <td rowspan="2">17</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[16].account1" @change="checkCorrect(16, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[16].debit" @input="updateCredit(16)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[16].drCorrect, 'incorrect': !journalEntries[16].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 17 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[16].account2" @change="checkCorrect(16, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[16].credit }}</td>
+                        <td :class="{'correct': journalEntries[16].crCorrect, 'incorrect': !journalEntries[16].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 18 - Dr -->
+                    <tr>
+                        <td rowspan="2">18</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[17].account1" @change="checkCorrect(17, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[17].debit" @input="updateCredit(17)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[17].drCorrect, 'incorrect': !journalEntries[17].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 18 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[17].account2" @change="checkCorrect(17, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[17].credit }}</td>
+                        <td :class="{'correct': journalEntries[17].crCorrect, 'incorrect': !journalEntries[17].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 19 - Dr -->
+                    <tr>
+                        <td rowspan="2">19</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[18].account1" @change="checkCorrect(18, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[18].debit" @input="updateCredit(18)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[18].drCorrect, 'incorrect': !journalEntries[18].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 19 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[18].account2" @change="checkCorrect(18, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[18].credit }}</td>
+                        <td :class="{'correct': journalEntries[18].crCorrect, 'incorrect': !journalEntries[18].crCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 20 - Dr -->
+                    <tr>
+                        <td rowspan="2">20</td>
+                        <td rowspan="2">30.06.2022</td>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Dr:</div>
+                                <select v-model="journalEntries[19].account1" @change="checkCorrect(19, 'dr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><input type="number" v-model="journalEntries[19].debit" @input="updateCredit(19)"></td>
+                        <td></td>
+                        <td :class="{'correct': journalEntries[19].drCorrect, 'incorrect': !journalEntries[19].drCorrect}"></td>
+                    </tr>
+                    <!-- Transaction 20 - Cr -->
+                    <tr>
+                        <td>
+                            <div class="account-row">
+                                <div class="account-label">Cr:</div>
+                                <select v-model="journalEntries[19].account2" @change="checkCorrect(19, 'cr')">
+                                    <option value="">Select account</option>
+                                    <option v-for="account in accounts" :value="account">{{ account }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>{{ journalEntries[19].credit }}</td>
+                        <td :class="{'correct': journalEntries[19].crCorrect, 'incorrect': !journalEntries[19].crCorrect}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Page 3: General Ledger -->
+        <div id="page3" class="page" :class="{active: currentPage === 'page3'}">
+            <h1>General Ledger</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="6">ASSETS</th>
+                        <th colspan="6">LIABILITIES</th>
+                        <th colspan="6">EQUITY</th>
+                    </tr>
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Cash</th>
+                        <th colspan="6">Accounts payable</th>
+                        <th colspan="6">Shareholder's capital</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashDR1.num" @input="handlersDR.cashDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.cashDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.cashDR1.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR1.num" @input="handlersCR.cashCR1($event)"></td>
+                
+                        <!-- Accounts payable -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableDR1.num" @input="handlersDR.accountspayableDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableDR1.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableCR1.num" @input="handlersCR.accountspayableCR1($event)"></td>
+                
+                        <!-- Shareholder's capital -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.shareholderscapitalCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.shareholderscapitalCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.shareholderscapitalCR1.num" @input="handlersCR.shareholderscapitalCR1($event)"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td  class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashDR2.num" @input="handlersDR.cashDR2($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.cashDR2.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.cashDR2.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR2.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR2.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR2.num" @input="handlersCR.cashCR2($event)"></td>
+                
+                        <!-- Accounts payable -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableDR2.num" @input="handlersDR.accountspayableDR2($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableDR2.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableDR2.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableCR2.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableCR2.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableCR2.num" @input="handlersCR.accountspayableCR2($event)"></td>
+                
+                        <!-- Shareholder's capital -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.shareholderscapitalCR2.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.shareholderscapitalCR2.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.shareholderscapitalCR2.num" @input="handlersCR.shareholderscapitalCR2($event)"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR3.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR3.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR3.num" @input="handlersCR.cashCR3($event)"></td>
+                
+                        <!-- Accounts payable -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableDR3.num" @input="handlersDR.accountspayableDR3($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableDR3.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableDR3.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountspayableCR3.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.accountspayableCR3.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountspayableCR3.num" @input="handlersCR.accountspayableCR3($event)"></td>
+                
+                        <!-- Shareholder's capital -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td class="amount-cell debit-total">{{ totalShareholderscapitalDebit }}</td>
+                        <td class="amount-cell debit-total">{{ totalShareholderscapitalCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR4.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR4.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR4.num" @input="handlersCR.cashCR4($event)"></td>
+                
+                        <!-- Accounts payable -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalAccountspayableDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalAccountspayableCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                
+                        <!-- Shareholder's capital -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell credit-total1">{{ totalShareholderscapitalCredit - totalShareholderscapitalDebit }}</td>
+                        <td></td>
+                        <td class="number-cell">Cb</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR5.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR5.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR5.num" @input="handlersCR.cashCR5($event)"></td>
+                
+                        <!-- Accounts payable -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell credit-total1">{{ totalAccountspayableCredit - totalAccountspayableDebit }}</td>
+                        <td></td>
+                        <td class="number-cell">Cb</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR6.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR6.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR6.num" @input="handlersCR.cashCR6($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                       <td class="amount-cell">{{ ledgerEntries.cashCR7.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR7.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR7.num" @input="handlersCR.cashCR7($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.cashCR8.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.cashCR8.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.cashCR8.num" @input="handlersCR.cashCR8($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td class="amount-cell debit-total">{{ totalCashDebit }}</td>
+                        <td class="amount-cell debit-total">{{ totalCashCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Cash -->
+                        <td class="number-cell">Cd</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalCashDebit -  totalCashCredit}}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td> 
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+                    
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Accounts receivable</th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Retained earnings</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <!-- Accounts receivable -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountsreceivableDR1.num" @input="handlersDR.accountsreceivableDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.accountsreceivableDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountsreceivableDR1.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountsreceivableCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.accountsreceivableCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountsreceivableCR1.num" @input="handlersCR.accountsreceivableCR1($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Accounts receivable -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.accountsreceivableDR2.num" @input="handlersDR.accountsreceivableDR2($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.accountsreceivableDR2.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.accountsreceivableDR2.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Accounts receivable -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td class="amount-cell debit-total"> {{ totalAccountsreceivableDebit }}</td>
+                        <td class="amount-cell debit-total">{{ totalAccountsreceivableCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Accounts receivable -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalAccountsreceivableDebit - totalAccountsreceivableCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Prepaid rent</th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Revenue</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <!-- Prepaid rent -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.prepaidrentDR1.num" @input="handlersDR.prepaidrentDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.prepaidrentDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.prepaidrentDR1.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.prepaidrentCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.prepaidrentCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.prepaidrentCR1.num" @input="handlersCR.prepaidrentCR1($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Revenue -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.revenueCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.revenueCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.revenueCR1.num" @input="handlersCR.revenueCR1($event)"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Prepaid rent -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalPrepaidrentDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalPrepaidrentCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Revenue -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell">{{ ledgerEntries.revenueCR2.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.revenueCR2.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.revenueCR2.num" @input="handlersCR.revenueCR2($event)"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Prepaid rent -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalPrepaidrentDebit - totalPrepaidrentCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Revenue -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalRevenueDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalRevenueCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Prepaid rent -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Revenue -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td class="amount-cell credit-total1">{{ totalRevenueCredit - totalRevenueDebit }}</td>
+                        <td></td>
+                        <td class="number-cell">Cd</td>
+                    </tr>
+                    
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Inventory</th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Rent expenses</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <!-- Inventory -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.inventoryDR1.num" @input="handlersDR.inventoryDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.inventoryDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.inventoryDR1.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.inventoryCR1.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.inventoryCR1.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.inventoryCR1.num" @input="handlersCR.inventoryCR1($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Rent expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.rentexpensesDR1.num" @input="handlersDR.rentexpensesDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.rentexpensesDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.rentexpensesDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Inventory -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.inventoryDR2.num" @input="handlersDR.inventoryDR2($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.inventoryDR2.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.inventoryDR2.amount }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.inventoryCR2.amount }}</td>
+                        <td class="desc-cell">{{ ledgerEntries.inventoryCR2.desc }}</td>
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.inventoryCR2.num" @input="handlersCR.inventoryCR2($event)"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Rent expenses -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalRentexpensesDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalRentexpensesCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Inventory -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalInventoryDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalInventoryCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Rent expenses -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalRentexpensesDebit - totalRentexpensesCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Inventory -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalInventoryDebit - totalInventoryCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Rent expenses -->
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Automobile</th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Office supplies expenses</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <!-- Automobile -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.automobileDR1.num" @input="handlersDR.automobileDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.automobileDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.automobileDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Office supplies expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.officesuppliesexpensesDR1.num" @input="handlersDR.officesuppliesexpensesDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.officesuppliesexpensesDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.officesuppliesexpensesDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Automobile -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalAutomobileDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalAutomobileCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Office supplies expenses -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalOfficesuppliesexpensesDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalOfficesuppliesexpensesCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Automobile -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalAutomobileDebit - totalAutomobileCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Office supplies expenses -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalOfficesuppliesexpensesDebit - totalOfficesuppliesexpensesCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6">Equipment</th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Wage expenses</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <!-- Equipment -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.equipmentDR1.num" @input="handlersDR.equipmentDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.equipmentDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.equipmentDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Wage expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.wageexpensesDR1.num" @input="handlersDR.wageexpensesDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.wageexpensesDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.wageexpensesDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <!-- Equipment -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalEquipmentDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalEquipmentCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Wage expenses -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalWageexpensesDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalWageexpensesCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <!-- Equipment -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalEquipmentDebit - totalEquipmentCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Wage expenses -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalWageexpensesDebit - totalWageexpensesCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6"></th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Petrol expenses</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Petrol expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.petrolexpensesDR1.num" @input="handlersDR.petrolexpensesDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.petrolexpensesDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.petrolexpensesDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Petrol expenses -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalPetrolexpensesDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalPetrolexpensesCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Petrol expenses -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalPetrolexpensesDebit - totalPetrolexpensesCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6"></th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Representative expenses</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Representative expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.representativeexpensesDR1.num" @input="handlersDR.representativeexpensesDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.representativeexpensesDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.representativeexpensesDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Representative expenses -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.representativeexpensesDR2.num" @input="handlersDR.representativeexpensesDR2($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.representativeexpensesDR2.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.representativeexpensesDR2.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Representative expenses -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalRepresentativeexpensesDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalRepresentativeexpensesCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Representative expenses -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalRepresentativeexpensesDebit - totalRepresentativeexpensesCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <!-- Заголовки -->
+                    <tr>
+                        <th colspan="6"></th>
+                        <th colspan="6"></th>
+                        <th colspan="6">Dividends</th>
+                    </tr>
+                    <tr>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2"class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                        <th class="number-cell">№</th>
+                        <th colspan="2">Dr</th>
+                        <th colspan="2" class="right-align">Cr</th>
+                        <th class="number-cell">№</th>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Dividends -->
+                        <td class="number-cell"><input type="number" size="3" :value="ledgerEntries.dividendsDR1.num" @input="handlersDR.dividendsDR1($event)"></td>
+                        <td class="desc-cell">{{ ledgerEntries.dividendsDR1.desc }}</td>
+                        <td class="amount-cell">{{ ledgerEntries.dividendsDR1.amount }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Dividends -->
+                        <td class="number-cell">Dt</td>
+                        <td></td>
+                        <td  class="amount-cell debit-total">{{ totalDividendsDebit }}</td>
+                        <td  class="amount-cell debit-total">{{ totalDividendsCredit }}</td>
+                        <td></td>
+                        <td class="number-cell">Ct</td>
+                    </tr>
+
+                    <tr>
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+
+                        <td class="number-cell"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                        <!-- Dividends -->
+                        <td class="number-cell">Cb</td>
+                        <td></td>
+                        <td class="amount-cell credit-total">{{ totalDividendsDebit - totalDividendsCredit }}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="number-cell"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Page 4: Trial Balance -->
+        <div id="page4" class="page" :class="{active: currentPage === 'page4'}">
+            <h1>Trial Balance</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th class="credit-total" style="text-align: center;">Dr, ₽</th>
+                        <th class="credit-total1" style="text-align: center;">Cr, ₽</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(account, accName) in trialBalance" :key="accName">
+                        <td>{{ accName }}</td>
+                        <td style="text-align: center;">{{ account.debit || '' }}</td>
+                        <td style="text-align: center;">{{ account.credit || '' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Total Debit: {{ totalDebit }}</p>
+            <p>Total Credit: {{ totalCredit }}</p>
+            <p v-if="totalDebit === totalCredit && totalDebit === 2920000 && totalCredit === 2920000" style="color: green;">BALANCE IS CORRECT</p>
+            <p v-else style="color: red;">ERROR: DEBIT AND CREDIT DO NOT MATCH OR INCORRECT</p>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        createApp({
+            setup() {
+                const currentPage = ref('page1');
+                const accounts = ref([
+                    "Equipment",
+                    "Automobile",
+                    "Inventory",
+                    "Prepaid rent",
+                    "Accounts receivable",
+                    "Cash",
+                    "Accounts payable",
+                    "Shareholder's capital",
+                    "Retained earnings",
+                    "Dividends",
+                    "Revenue",
+                    "Rent expenses",
+                    "Office supplies expenses",
+                    "Wage expenses",
+                    "Petrol expenses",
+                    "Representative expenses",
+                    ""
+                ]);
+
+                const journalEntries = ref([
+                    // 1
+                    { 
+                        account1: '', 
+                        account2: '', 
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Cash',
+                        correctAccount2: "Shareholder's capital",
+                        correctDebit: 2000000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 2
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Prepaid rent',
+                        correctAccount2: 'Cash',
+                        correctDebit: 40000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 3
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Equipment',
+                        correctAccount2: 'Accounts payable',
+                        correctDebit: 200000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 4
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Inventory',
+                        correctAccount2: 'Accounts payable',
+                        correctDebit: 30000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 5
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: '',
+                        correctAccount2: '',
+                        correctDebit: 0,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 6
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Accounts receivable',
+                        correctAccount2: 'Revenue',
+                        correctDebit: 280000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 7
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Automobile',
+                        correctAccount2: "Shareholder's capital",
+                        correctDebit: 400000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 8
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Inventory',
+                        correctAccount2: 'Cash',
+                        correctDebit: 2000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 9
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Representative expenses',
+                        correctAccount2: 'Cash',
+                        correctDebit: 4000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 10
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Accounts receivable',
+                        correctAccount2: 'Revenue',
+                        correctDebit: 240000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 11
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Representative expenses',
+                        correctAccount2: 'Cash',
+                        correctDebit: 6000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 12
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Office supplies expenses',
+                        correctAccount2: 'Inventory',
+                        correctDebit: 30000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 13
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Petrol expenses',
+                        correctAccount2: 'Inventory',
+                        correctDebit: 2000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 14
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Wage expenses',
+                        correctAccount2: 'Accounts payable',
+                        correctDebit: 50000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 15
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Accounts payable',
+                        correctAccount2: 'Cash',
+                        correctDebit: 50000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 16
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Accounts payable',
+                        correctAccount2: 'Cash',
+                        correctDebit: 200000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 17
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Accounts payable',
+                        correctAccount2: 'Cash',
+                        correctDebit: 30000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 18
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Cash',
+                        correctAccount2: 'Accounts receivable',
+                        correctDebit: 280000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 19
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Dividends',
+                        correctAccount2: 'Cash',
+                        correctDebit: 50000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    },
+                    // 20
+                    { 
+                        account1: '', 
+                        account2: '',
+                        debit: 0, 
+                        credit: 0,
+                        correctAccount1: 'Rent expenses',
+                        correctAccount2: 'Prepaid rent',
+                        correctDebit: 40000,
+                        drCorrect: false,
+                        crCorrect: false,
+                        isCorrect: false
+                    }
+                ]);
+
+                const ledgerAccounts = ref({
+                    "Cash": { debit: 0, credit: 0 },
+                    "Shareholder's capital": { debit: 0, credit: 0 },
+                    "Prepaid rent": { debit: 0, credit: 0 },
+                    "Equipment": { debit: 0, credit: 0 },
+                    "Accounts payable": { debit: 0, credit: 0 },
+                    "Inventory": { debit: 0, credit: 0 },
+                    "Accounts receivable": { debit: 0, credit: 0 },
+                    "Revenue": { debit: 0, credit: 0 },
+                    "Automobile": { debit: 0, credit: 0 },
+                    "Wage expenses": { debit: 0, credit: 0 },
+                    "Petrol expenses": { debit: 0, credit: 0 },
+                    "Representative expenses": { debit: 0, credit: 0 },
+                    "Office supplies expenses": { debit: 0, credit: 0 },
+                    "Rent expenses": { debit: 0, credit: 0 },
+                    "Retained earnings": { debit: 0, credit: 0 },
+                    "Dividends": { debit: 0, credit: 0 }
+                });
+
+                const updateCredit = (index) => {
+                    journalEntries.value[index].credit = journalEntries.value[index].debit;
+                    checkCorrect(index, 'dr');
+                    checkCorrect(index, 'cr');
+                };
+
+                const checkCorrect = (index, type) => {
+                    const entry = journalEntries.value[index];
+                    
+                    if (type === 'dr') {
+                        entry.drCorrect = entry.account1 === entry.correctAccount1 && 
+                                         Number(entry.debit) === entry.correctDebit;
+                    } else if (type === 'cr') {
+                        entry.crCorrect = entry.account2 === entry.correctAccount2 && 
+                                         Number(entry.credit) === entry.correctDebit;
+                    }
+                    
+                    entry.isCorrect = entry.drCorrect && entry.crCorrect;
+                };
+
+                const saveJournalEntries = () => {
+                    for (const accName in ledgerAccounts.value) {
+                        ledgerAccounts.value[accName] = { debit: 0, credit: 0 };
+                    }
+
+                    journalEntries.value.forEach(entry => {
+                        if (entry.account1 && entry.debit) {
+                            if (!ledgerAccounts.value[entry.account1]) {
+                                ledgerAccounts.value[entry.account1] = { debit: 0, credit: 0 };
+                            }
+                            ledgerAccounts.value[entry.account1].debit += Number(entry.debit) || 0;
+                        }
+                        
+                        if (entry.account2 && entry.credit) {
+                            if (!ledgerAccounts.value[entry.account2]) {
+                                ledgerAccounts.value[entry.account2] = { debit: 0, credit: 0 };
+                            }
+                            ledgerAccounts.value[entry.account2].credit += Number(entry.credit) || 0;
+                        }
+                    });
+                };
+
+
+                const initializeCorrectCells = () => {
+                    journalEntries.value.forEach((entry, index) => {
+                        entry.drCorrect = false;
+                        entry.crCorrect = false;
+                        entry.isCorrect = false;
+                    });
+                };
+
+                const ledgerEntries = ref({
+                    cashDR1: { num: '', desc: '', amount: '' },
+                    cashDR2: { num: '', desc: '', amount: '' },
+
+                    accountspayableDR1: { num: '', desc: '', amount: '' },
+                    accountspayableDR2: { num: '', desc: '', amount: '' },
+                    accountspayableDR3: { num: '', desc: '', amount: '' },
+
+                    accountsreceivableDR1: { num: '', desc: '', amount: '' },
+                    accountsreceivableDR2: { num: '', desc: '', amount: '' },
+
+                    prepaidrentDR1: { num: '', desc: '', amount: '' },
+
+                    inventoryDR1: { num: '', desc: '', amount: '' },
+                    inventoryDR2: { num: '', desc: '', amount: '' },
+
+                    rentexpensesDR1: { num: '', desc: '', amount: '' },
+
+                    automobileDR1: { num: '', desc: '', amount: '' },
+
+                    officesuppliesexpensesDR1: { num: '', desc: '', amount: '' },
+
+                    equipmentDR1: { num: '', desc: '', amount: '' },
+
+                    wageexpensesDR1: { num: '', desc: '', amount: '' },
+
+                    petrolexpensesDR1: { num: '', desc: '', amount: '' },
+
+                    representativeexpensesDR1: { num: '', desc: '', amount: '' },
+                    representativeexpensesDR2: { num: '', desc: '', amount: '' },
+
+                    dividendsDR1: { num: '', desc: '', amount: '' },
+
+                    cashCR1: { num: '', desc: '', amount: '' },
+                    cashCR2: { num: '', desc: '', amount: '' },
+                    cashCR3: { num: '', desc: '', amount: '' },
+                    cashCR4: { num: '', desc: '', amount: '' },
+                    cashCR5: { num: '', desc: '', amount: '' },
+                    cashCR6: { num: '', desc: '', amount: '' },
+                    cashCR7: { num: '', desc: '', amount: '' },
+                    cashCR8: { num: '', desc: '', amount: '' },
+
+                    accountspayableCR1: { num: '', desc: '', amount: '' },
+                    accountspayableCR2: { num: '', desc: '', amount: '' },
+                    accountspayableCR3: { num: '', desc: '', amount: '' },
+
+                    shareholderscapitalCR1: { num: '', desc: '', amount: '' },
+                    shareholderscapitalCR2: { num: '', desc: '', amount: '' },
+
+                    accountsreceivableCR1: { num: '', desc: '', amount: '' },
+
+                    prepaidrentCR1: { num: '', desc: '', amount: '' },
+
+                    revenueCR1: { num: '', desc: '', amount: '' },
+                    revenueCR2: { num: '', desc: '', amount: '' },
+
+                    inventoryCR1: { num: '', desc: '', amount: '' },
+                    inventoryCR2: { num: '', desc: '', amount: '' },
+                });
+
+
+                const handleLedgerInputDR = (entryKey, journalIndex) => (event) => {
+                    const value = event.target.value;
+                    ledgerEntries.value[entryKey].num = value;
+            
+                    if (value === String(journalIndex + 1)) {
+                        const journalEntry = journalEntries.value[journalIndex];
+                        ledgerEntries.value[entryKey].desc = journalEntry.correctAccount2;
+                        ledgerEntries.value[entryKey].amount = journalEntry.correctDebit;
+                    } else {
+                        ledgerEntries.value[entryKey].desc = '';
+                        ledgerEntries.value[entryKey].amount = '';
+                    }
+                };
+
+                const handleLedgerInputCR = (entryKey, journalIndex) => (event) => {
+                    const value = event.target.value;
+                    ledgerEntries.value[entryKey].num = value;
+            
+                    if (value === String(journalIndex + 1)) {
+                        const journalEntry = journalEntries.value[journalIndex];
+                        ledgerEntries.value[entryKey].desc = journalEntry.correctAccount1;
+                        ledgerEntries.value[entryKey].amount = journalEntry.correctDebit;
+                    } else {
+                        ledgerEntries.value[entryKey].desc = '';
+                        ledgerEntries.value[entryKey].amount = '';
+                    }
+                };
+
+                const handlersDR = {
+                    cashDR1: handleLedgerInputDR('cashDR1', 0),
+                    cashDR2: handleLedgerInputDR('cashDR2', 17),
+
+                    accountspayableDR1: handleLedgerInputDR('accountspayableDR1', 14),
+                    accountspayableDR2: handleLedgerInputDR('accountspayableDR2', 15),
+                    accountspayableDR3: handleLedgerInputDR('accountspayableDR3', 16),
+
+                    accountsreceivableDR1: handleLedgerInputDR('accountsreceivableDR1', 5),
+                    accountsreceivableDR2: handleLedgerInputDR('accountsreceivableDR2', 9),
+                    
+                    prepaidrentDR1: handleLedgerInputDR('prepaidrentDR1', 1),
+
+                    inventoryDR1: handleLedgerInputDR('inventoryDR1', 3),
+                    inventoryDR2: handleLedgerInputDR('inventoryDR2', 7),
+
+                    rentexpensesDR1: handleLedgerInputDR('rentexpensesDR1', 19),
+
+                    automobileDR1: handleLedgerInputDR('automobileDR1', 6),
+
+                    officesuppliesexpensesDR1: handleLedgerInputDR('officesuppliesexpensesDR1', 11),
+                    
+                    equipmentDR1: handleLedgerInputDR('equipmentDR1', 2),
+
+                    wageexpensesDR1: handleLedgerInputDR('wageexpensesDR1', 13),
+
+                    petrolexpensesDR1: handleLedgerInputDR('petrolexpensesDR1', 12),
+
+                    representativeexpensesDR1: handleLedgerInputDR('representativeexpensesDR1', 8),
+                    representativeexpensesDR2: handleLedgerInputDR('representativeexpensesDR2', 10),
+
+                    dividendsDR1: handleLedgerInputDR('dividendsDR1', 18),
+                };
+
+                const handlersCR = {
+                    cashCR1: handleLedgerInputCR('cashCR1', 1),
+                    cashCR2: handleLedgerInputCR('cashCR2', 7),
+                    cashCR3: handleLedgerInputCR('cashCR3', 8),
+                    cashCR4: handleLedgerInputCR('cashCR4', 10),
+                    cashCR5: handleLedgerInputCR('cashCR5', 14),
+                    cashCR6: handleLedgerInputCR('cashCR6', 15),
+                    cashCR7: handleLedgerInputCR('cashCR7', 16),
+                    cashCR8: handleLedgerInputCR('cashCR8', 18),
+
+                    accountspayableCR1: handleLedgerInputCR('accountspayableCR1', 2),
+                    accountspayableCR2: handleLedgerInputCR('accountspayableCR2', 3),
+                    accountspayableCR3: handleLedgerInputCR('accountspayableCR3', 13),
+
+                    shareholderscapitalCR1: handleLedgerInputCR('shareholderscapitalCR1', 0),
+                    shareholderscapitalCR2: handleLedgerInputCR('shareholderscapitalCR2', 6),
+
+                    accountsreceivableCR1: handleLedgerInputCR('accountsreceivableCR1', 17),
+
+                    prepaidrentCR1: handleLedgerInputCR('prepaidrentCR1', 19),
+                    
+                    revenueCR1: handleLedgerInputCR('revenueCR1', 5),
+                    revenueCR2: handleLedgerInputCR('revenueCR2', 9),
+
+                    inventoryCR1: handleLedgerInputCR('inventoryCR1', 11),
+                    inventoryCR2: handleLedgerInputCR('inventoryCR2', 12),
+                };
+
+                const totalCashDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.cashDR1.amount,
+                        ledgerEntries.value.cashDR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalCashCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.cashCR1.amount,
+                        ledgerEntries.value.cashCR2.amount,
+                        ledgerEntries.value.cashCR3.amount,
+                        ledgerEntries.value.cashCR4.amount,
+                        ledgerEntries.value.cashCR5.amount,
+                        ledgerEntries.value.cashCR6.amount,
+                        ledgerEntries.value.cashCR7.amount,
+                        ledgerEntries.value.cashCR8.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAccountspayableDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.accountspayableDR1.amount,
+                        ledgerEntries.value.accountspayableDR2.amount,
+                        ledgerEntries.value.accountspayableDR3.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAccountspayableCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.accountspayableCR1.amount,
+                        ledgerEntries.value.accountspayableCR2.amount,
+                        ledgerEntries.value.accountspayableCR3.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+                
+                const totalShareholderscapitalDebit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalShareholderscapitalCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.shareholderscapitalCR1.amount,
+                        ledgerEntries.value.shareholderscapitalCR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAccountsreceivableDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.accountsreceivableDR1.amount,
+                        ledgerEntries.value.accountsreceivableDR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAccountsreceivableCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.accountsreceivableCR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalPrepaidrentDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.prepaidrentDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalPrepaidrentCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.prepaidrentCR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalInventoryDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.inventoryDR1.amount,
+                        ledgerEntries.value.inventoryDR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalInventoryCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.inventoryCR1.amount,
+                        ledgerEntries.value.inventoryCR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAutomobileDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.automobileDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalAutomobileCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalEquipmentDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.equipmentDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalEquipmentCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+                
+                const totalRevenueDebit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalRevenueCredit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.revenueCR1.amount,
+                        ledgerEntries.value.revenueCR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalRentexpensesDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.rentexpensesDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalRentexpensesCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalOfficesuppliesexpensesDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.officesuppliesexpensesDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalOfficesuppliesexpensesCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalWageexpensesDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.wageexpensesDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalWageexpensesCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalPetrolexpensesDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.petrolexpensesDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalPetrolexpensesCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalRepresentativeexpensesDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.representativeexpensesDR1.amount,
+                        ledgerEntries.value.representativeexpensesDR2.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalRepresentativeexpensesCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalDividendsDebit = computed(() => {
+                    const amounts = [
+                        ledgerEntries.value.dividendsDR1.amount
+                    ];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const totalDividendsCredit = computed(() => {
+                    const amounts = [];
+                    return amounts.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                });
+
+                const accountBalances = computed(() => {
+                    return {
+                        "Cash": totalCashDebit.value - totalCashCredit.value,
+                        "Shareholder's capital": totalShareholderscapitalCredit.value - totalShareholderscapitalDebit.value,
+                        "Prepaid rent": totalPrepaidrentDebit.value - totalPrepaidrentCredit.value,
+                        "Equipment": totalEquipmentDebit.value - totalEquipmentCredit.value,
+                        "Accounts payable": totalAccountspayableCredit.value - totalAccountspayableDebit.value,
+                        "Inventory": totalInventoryDebit.value - totalInventoryCredit.value,
+                        "Accounts receivable": totalAccountsreceivableDebit.value - totalAccountsreceivableCredit.value,
+                        "Revenue": totalRevenueCredit.value - totalRevenueDebit.value,
+                        "Automobile": totalAutomobileDebit.value - totalAutomobileCredit.value,
+                        "Wage expenses": totalWageexpensesDebit.value - totalWageexpensesCredit.value,
+                        "Petrol expenses": totalPetrolexpensesDebit.value - totalPetrolexpensesCredit.value,
+                        "Representative expenses": totalRepresentativeexpensesDebit.value - totalRepresentativeexpensesCredit.value,
+                        "Office supplies expenses": totalOfficesuppliesexpensesDebit.value - totalOfficesuppliesexpensesCredit.value,
+                        "Rent expenses": totalRentexpensesDebit.value - totalRentexpensesCredit.value,
+                        "Dividends": totalDividendsDebit.value - totalDividendsCredit.value,
+                    };
+                });
+
+                const trialBalance = computed(() => {
+                    const result = {};
+                
+                    for (const [account, balance] of Object.entries(accountBalances.value)) {
+                        if (balance > 0) {
+                            result[account] = {
+                                debit: [
+                                    "Cash", "Prepaid rent", "Equipment", "Inventory", 
+                                    "Accounts receivable", "Automobile", "Wage expenses",
+                                    "Petrol expenses", "Representative expenses", 
+                                    "Office supplies expenses", "Rent expenses", "Dividends"
+                                ].includes(account) ? balance : 0,
+                                credit: [
+                                    "Shareholder's capital", "Accounts payable", "Revenue"
+                                ].includes(account) ? balance : 0
+                            };
+                        } else if (balance < 0) {
+                            result[account] = {
+                                debit: [
+                                    "Shareholder's capital", "Accounts payable", "Revenue"
+                                ].includes(account) ? -balance : 0,
+                                credit: [
+                                    "Cash", "Prepaid rent", "Equipment", "Inventory", 
+                                    "Accounts receivable", "Automobile", "Wage expenses",
+                                    "Petrol expenses", "Representative expenses", 
+                                    "Office supplies expenses", "Rent expenses", "Dividends"
+                                ].includes(account) ? -balance : 0
+                            };
+                        } else {
+                            result[account] = { debit: 0, credit: 0 };
+                        }
+                    }
+                
+                    return result;
+                });
+
+                const totalDebit = computed(() => {
+                    return Object.values(trialBalance.value).reduce((sum, acc) => sum + (acc.debit || 0), 0);
+                });
+
+                const totalCredit = computed(() => {
+                    return Object.values(trialBalance.value).reduce((sum, acc) => sum + (acc.credit || 0), 0);
+                });
+
+                const allJournalEntriesCorrect = computed(() => {
+                    return journalEntries.value.every(entry => entry.isCorrect);
+                });
+
+                const goToPage3 = () => {
+                    if (allJournalEntriesCorrect.value) {
+                        currentPage.value = 'page3';
+                    } else {
+                        alert("Пожалуйста, заполните все операции в Журнале корректно (все ячейки должны быть зелеными) перед открытием Главной книги.");
+                    }
+                };
+
+                saveJournalEntries();
+                initializeCorrectCells();
+
+                return {
+                    currentPage,
+                    accounts,
+                    journalEntries,
+                    ledgerAccounts,
+                    trialBalance,
+                    totalDebit,
+                    totalCredit,
+                    updateCredit,
+                    saveJournalEntries,
+                    checkCorrect,
+                    ledgerEntries,
+                    handleLedgerInputDR,
+                    handleLedgerInputCR,
+                    handlersDR,
+                    handlersCR,
+                    totalCashDebit,
+                    totalCashCredit,
+                    totalAccountspayableDebit,
+                    totalAccountspayableCredit,
+                    totalShareholderscapitalDebit,
+                    totalShareholderscapitalCredit,
+                    totalAccountsreceivableDebit,
+                    totalAccountsreceivableCredit,
+                    totalPrepaidrentDebit,
+                    totalPrepaidrentCredit,
+                    totalInventoryDebit,
+                    totalInventoryCredit,
+                    totalAutomobileDebit,
+                    totalAutomobileCredit,
+                    totalEquipmentDebit,
+                    totalEquipmentCredit,
+                    totalRevenueDebit,
+                    totalRevenueCredit,
+                    totalRentexpensesDebit,
+                    totalRentexpensesCredit,
+                    totalOfficesuppliesexpensesDebit,
+                    totalOfficesuppliesexpensesCredit,
+                    totalWageexpensesDebit,
+                    totalWageexpensesCredit,
+                    totalPetrolexpensesDebit,
+                    totalPetrolexpensesCredit,
+                    totalRepresentativeexpensesDebit,
+                    totalRepresentativeexpensesCredit,
+                    totalDividendsDebit,
+                    totalDividendsCredit,
+                    accountBalances,
+                    allJournalEntriesCorrect,
+                    goToPage3
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
